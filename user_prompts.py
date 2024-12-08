@@ -3,7 +3,7 @@ import random
 
 def get_nums():
     """
-    Prompt user to input a series of nums, then return them sorted (asc)
+    Prompt user to input a series of nums, then return them sorted in ascending order
 
     Returns:
         list: A sorted list of numbers
