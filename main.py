@@ -1,17 +1,19 @@
 from audio import *
+import numpy as np
+import time
 
 def main():
 
-    for i in range(3):
-        play_arpeggio(Chords.C_MAJOR.frequencies, duration=0.15)
-    
-    for i in range(3):
-        play_arpeggio(Chords.F_MAJOR.frequencies, duration=0.15)
+    # play_arpeggio(Chords.B_MINOR.frequencies)
+    # play_arpeggio(Chords.A_MINOR.frequencies)
+    # play_arpeggio(Chords.G_MINOR.frequencies)
 
-    play_arpeggio(Chords.G_MAJOR.frequencies, duration=0.15)
-    play_arpeggio(Chords.F_MAJOR.frequencies, duration=0.15)
-    play_arpeggio(Chords.E_MINOR.frequencies, duration=0.15)
-    play_arpeggio(Chords.C_MAJOR.frequencies, duration=0.15)
+    for i in np.linspace(0, 5, 10):
+        play_note(Notes.C4.frequency, effect="distortion", level=i)
+
+
+    for i in range(10):
+        play_note(Notes.C4.frequency)
 
 
     close_audio()

@@ -2,8 +2,8 @@ from enum import Enum
 import numpy as np
 import pyaudio
 
-NOTE_LENGTH = 0.1   # duration in seconds
-SAMPLE_RATE = 44100
+NOTE_LENGTH = 0.2   # Duration to play note, in seconds
+SAMPLE_RATE = 44100 # Good default val
 
 class Notes(Enum):
     # Octave 3
@@ -104,7 +104,7 @@ def init_audio(SAMPLE_RATE):
                                 rate=SAMPLE_RATE,
                                 output=True)
         
-def play_note(frequency, duration=NOTE_LENGTH, sample_rate=SAMPLE_RATE):
+def play_note(frequency, duration=NOTE_LENGTH, sample_rate=SAMPLE_RATE, effect=None, level=0.0):
     """
     Play a sine wave at a specific frequency for a specific duration
 
@@ -117,9 +117,15 @@ def play_note(frequency, duration=NOTE_LENGTH, sample_rate=SAMPLE_RATE):
     init_audio(SAMPLE_RATE)
     t = np.linspace(0, duration, int(SAMPLE_RATE * duration), False)
     wave = (np.sin(2 * np.pi * frequency * t) * 0.5).astype(np.float32)
-    _stream.write(wave.tobytes())
 
-def play_arpeggio(frequencies, duration=0.5, sample_rate=SAMPLE_RATE):
+    if effect == None:
+        _stream.write(wave.tobytes())
+    elif effect == "distortion":
+        distorted_wave = apply_distortion(wave, gain=level * 5, target_amplitude=0.5)
+        _stream.write(distorted_wave.tobytes())
+
+
+def play_arpeggio(frequencies, duration=0.15, sample_rate=SAMPLE_RATE):
     """
     Plays multiple sine waves using a single PyAudio stream.
 
@@ -135,6 +141,31 @@ def play_arpeggio(frequencies, duration=0.5, sample_rate=SAMPLE_RATE):
         t = np.linspace(0, duration, int(sample_rate * duration), False)
         wave = (np.sin(2 * np.pi * frequency * t) * 0.5).astype(np.float32)
         _stream.write(wave.tobytes())
+
+
+def apply_distortion(wave, gain=5.0, target_amplitude=0.5):
+    """
+    Apply a distortion effect by dynamically compressing the waveform.
+
+    Args:
+        wave (numpy.ndarray): The input waveform.
+        gain (float): The amount of gain applied before the distortion. Higher values produce heavier distortion.
+    Returns:
+        numpy.ndarray: The distorted waveform.
+    """
+    # Apply gain to amplify the waveform
+    wave = wave * gain
+
+    # Use hyperbolic tangent for smooth distortion
+    distorted_wave = np.tanh(wave)
+
+    # Normalize the waveform to the target amplitude
+    max_amplitude = np.max(np.abs(distorted_wave))
+    if max_amplitude > 0:  # Avoid division by zero
+        distorted_wave = (distorted_wave / max_amplitude) * target_amplitude
+
+    return distorted_wave
+
 
 def close_audio():
     """Close the PyAudio stream and terminate PyAudio."""
