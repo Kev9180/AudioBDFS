@@ -1,19 +1,19 @@
 from audio import *
-import numpy as np
-import time
+from user_prompts import *
+from termcolor import colored
 
 def main():
+    
+    user_nums = get_nums()
+    get_menu_choice()
 
-    # play_arpeggio(Chords.B_MINOR.frequencies)
-    # play_arpeggio(Chords.A_MINOR.frequencies)
-    # play_arpeggio(Chords.G_MINOR.frequencies)
+    # for i in range(5):
+    #     play_arpeggio(Chords.A_MAJOR.frequencies)
+    # for i in range(5):
+    #     play_arpeggio(Chords.A_MINOR.frequencies)
 
-    for i in np.linspace(0, 5, 10):
-        play_note(Notes.C4.frequency, effect="distortion", level=i)
-
-
-    for i in range(10):
-        play_note(Notes.C4.frequency)
+    # for i in range(10):
+    #     play_note(Notes.C4.frequency)
 
 
     close_audio()
