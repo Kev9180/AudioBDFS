@@ -3,10 +3,7 @@ from user_prompts import *
 from termcolor import colored
 
 def main():
-    
-    user_nums = get_nums()
     get_menu_choice()
-
     # for i in range(5):
     #     play_arpeggio(Chords.A_MAJOR.frequencies)
     # for i in range(5):

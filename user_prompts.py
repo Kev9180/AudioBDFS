@@ -1,4 +1,5 @@
 from termcolor import colored
+import random
 
 def get_nums():
     """
@@ -7,39 +8,68 @@ def get_nums():
     Returns:
         list: A sorted list of numbers
     """
+    
+    choice = input(colored("\nWelcome! Would you like to provide your own array of numbers? Y for yes, N for no\n", "light_cyan"))
 
-    while True:
-        try:
-            user_input = input("Enter numbers separated by spaces. Press enter when done:\n")
+    if choice == "Y":
+        while True:
+            try:
+                user_input = input(colored("Enter numbers separated by spaces. Press enter when done:\n", "light_cyan"))
 
-            if not user_input:
-                print(colored("Input cannot be empty. Please enter at least one integer.", "red"))
-                continue
+                if not user_input:
+                    print(colored("Input cannot be empty. Please enter at least one integer.", "red"))
+                    continue
 
-            nums = list(map(int, user_input.split()))                
-            sorted_nums = sorted(nums)
-            print(colored(f"Sorted nums: {sorted_nums}", "green"))
-            return sorted_nums
-        except ValueError:
-            print(colored("Invalid input. Please enter a series of integers separated by spaces.", "red"))
+                nums = list(map(int, user_input.split()))                
+                sorted_nums = sorted(nums)
+                print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "green"))
+                return sorted_nums
+            except ValueError:
+                print(colored("Invalid input. Please enter a series of integers separated by spaces.", "red"))
+    
+    elif choice == "N":
+        while True:
+            try:
+                print(colored("No problem! I can generate some random numbers for you.", "light_cyan"))
+                nums_size = int(input(colored("How many numbers should i pick? (0 - 100)\n", "light_cyan")))
+                min_val = int(input(colored("Minimum numerical value?\n", "light_cyan")))
+                max_val = int(input(colored("Maximum numerical value?\n", "light_cyan")))
+
+                if nums_size <= 0 or nums_size > 100:
+                    print(colored("Size must be a positive number < 100. Try again!", "red"))
+                    continue
+                if min_val > max_val:
+                    print(colored("Minimum value cannot be greater than maximum value.", "red"))
+                    continue
+
+                nums = [random.randint(min_val, max_val) for _ in range(nums_size)]
+                sorted_nums = sorted(nums)
+                print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "green"))
+                return sorted_nums
+            except ValueError:
+                print(colored("Invalid input. Please enter integers only.", "red"))
+
+
 
 def get_menu_choice():
+    user_nums = get_nums()
+
     while True:
         try:
-            print("\n-- MENU --")
-            print("1\tPerform BFS")
-            print("2\tPerform DFS")
-            print("3\tUpdate nums")
-            print("4\tQuit")
+            print(colored("\n-- MENU --"))
+            print(colored("1\tPerform BFS"))
+            print(colored("2\tPerform DFS"))
+            print(colored("3\tRestart"))
+            print(colored("4\tQuit"))
 
-            choice = input("What action would you like to perform?\n").strip()
+            choice = input(colored("What action would you like to perform?\n")).strip()
 
             if choice == "1":
-                print(colored("Performing BFS...", "cyan"))
+                print(colored("Performing BFS...", "magenta"))
             elif choice == "2":
-                print(colored("Performing DFS...", "cyan"))
+                print(colored("Performing DFS...", "magenta"))
             elif choice == "3":
-                print(colored("Getting new nums...", "cyan"))
+                user_nums = get_nums()
             elif choice == "4":
                 print(colored("Quitting. Goodbye!", "magenta"))
                 break
