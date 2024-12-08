@@ -3,6 +3,7 @@ import numpy as np
 import pyaudio
 
 NOTE_LENGTH = 0.1   # duration in seconds
+SAMPLE_RATE = 44100
 
 class Notes(Enum):
     # Octave 3
@@ -65,41 +66,83 @@ class Notes(Enum):
     def frequency(self):
         return self.value
     
-# Define and instantiate a PyAudio object to work with
-p = pyaudio.PyAudio()
-stream = None
+class Chords(Enum):
+    # Major chords
+    C_MAJOR = [Notes.C4.frequency, Notes.E4.frequency, Notes.G4.frequency]
+    D_MAJOR = [Notes.D4.frequency, Notes.F_SHARP4.frequency, Notes.A4.frequency]
+    E_MAJOR = [Notes.E4.frequency, Notes.G_SHARP4.frequency, Notes.B4.frequency]
+    F_MAJOR = [Notes.F4.frequency, Notes.A4.frequency, Notes.C5.frequency]
+    G_MAJOR = [Notes.G4.frequency, Notes.B4.frequency, Notes.D5.frequency]
+    A_MAJOR = [Notes.A4.frequency, Notes.C_SHARP5.frequency, Notes.E5.frequency]
+    B_MAJOR = [Notes.B4.frequency, Notes.D_SHARP5.frequency, Notes.F_SHARP5.frequency]
 
-def play_frequency(frequencies, duration=0.5, sample_rate=44100):
+    # Minor chords
+    C_MINOR = [Notes.C4.frequency, Notes.D_SHARP4.frequency, Notes.G4.frequency]
+    D_MINOR = [Notes.D4.frequency, Notes.F4.frequency, Notes.A4.frequency]
+    E_MINOR = [Notes.E4.frequency, Notes.G4.frequency, Notes.B4.frequency]
+    F_MINOR = [Notes.F4.frequency, Notes.G_SHARP4.frequency, Notes.C5.frequency]
+    G_MINOR = [Notes.G4.frequency, Notes.A_SHARP4.frequency, Notes.D5.frequency]
+    A_MINOR = [Notes.A4.frequency, Notes.C5.frequency, Notes.E5.frequency]
+    B_MINOR = [Notes.B4.frequency, Notes.D5.frequency, Notes.F5.frequency]
+
+    @property
+    def frequencies(self):
+        """Return the list of frequencies for this chord."""
+        return self.value
+    
+# PyAudio globals
+_pyaudio = None
+_stream = None
+
+def init_audio(SAMPLE_RATE):
+    """Initialize PyAudio and a reusable stream"""
+    global _pyaudio, _stream
+    if _pyaudio is None:
+        _pyaudio = pyaudio.PyAudio()
+        _stream = _pyaudio.open(format=pyaudio.paFloat32,
+                                channels=1,
+                                rate=SAMPLE_RATE,
+                                output=True)
+        
+def play_note(frequency, duration=NOTE_LENGTH, sample_rate=SAMPLE_RATE):
     """
-    Plays multiple sine waves seamlessly using a single PyAudio stream.
+    Play a sine wave at a specific frequency for a specific duration
+
+    Args:
+        frequency (float): Frequency of the note in Hz
+        duration (float): Duration of note in seconds
+        sample_rate (int): Sampling rate in Hz
+    """
+
+    init_audio(SAMPLE_RATE)
+    t = np.linspace(0, duration, int(SAMPLE_RATE * duration), False)
+    wave = (np.sin(2 * np.pi * frequency * t) * 0.5).astype(np.float32)
+    _stream.write(wave.tobytes())
+
+def play_arpeggio(frequencies, duration=0.5, sample_rate=SAMPLE_RATE):
+    """
+    Plays multiple sine waves using a single PyAudio stream.
 
     Args:
         frequencies (list): List of frequencies in Hz to play.
         duration (float): Duration of each note in seconds.
         sample_rate (int): Sampling rate in Hz.
     """
-    global stream
 
-    if stream is None:
-        # Initialize the PyAudio stream (only once for seamless playback)
-        stream = p.open(format=pyaudio.paFloat32,
-                        channels=1,
-                        rate=sample_rate,
-                        output=True)
-
+    init_audio(SAMPLE_RATE)
     for frequency in frequencies:
         # Generate the sine wave for the current frequency
         t = np.linspace(0, duration, int(sample_rate * duration), False)
         wave = (np.sin(2 * np.pi * frequency * t) * 0.5).astype(np.float32)
-        
-        # Write the waveform to the stream (seamless playback)
-        stream.write(wave.tobytes())
+        _stream.write(wave.tobytes())
 
-def close_stream():
-    """Close the global PyAudio stream."""
-    global stream
-    if stream is not None:
-        stream.stop_stream()
-        stream.close()
-    p.terminate()
-    
+def close_audio():
+    """Close the PyAudio stream and terminate PyAudio."""
+    global _pyaudio, _stream
+    if _stream:
+        _stream.stop_stream()
+        _stream.close()
+    if _pyaudio:
+        _pyaudio.terminate()
+    _stream = None
+    _pyaudio = None    
