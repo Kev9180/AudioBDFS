@@ -1,9 +1,10 @@
-from notes import *
+from audio import *
 
 def main():
     arpeggio = [Notes.C4.frequency, Notes.E4.frequency, Notes.G4.frequency]
 
-    play_sine_wave_seamless(arpeggio, duration=0.15)
+    for i in range(6):
+        play_frequency(arpeggio, duration=0.15)
 
     close_stream()
 
