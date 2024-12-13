@@ -1,7 +1,14 @@
 from collections import deque
 from audio import Notes
-from bst_node import *
 from termcolor import colored
+
+class BSTNode:
+    def __init__(self, value, note):
+        self.value = value
+        self.note = note
+        self.parent = None
+        self.left = None
+        self.right = None
 
 class BinarySearchTree:
     def __init__(self):
@@ -69,11 +76,7 @@ class BinarySearchTree:
             print("Tree is empty.")
             return
 
-        # The original code uses a height function that returns -1 for None.
-        # Your get_height returns 0 for None and increases by 1 per level.
-        # For compatibility:
-        # A tree with a single node in your code has height = 1, while in their code height = 0.
-        # So we adjust by subtracting 1.
+        # Adjust height by subtracting 1
         nlevels = self.get_height(self.root) - 1
         width = 2 ** (nlevels + 1)
 
