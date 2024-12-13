@@ -92,13 +92,3 @@ def get_menu_choice():
 
         except ValueError:
             print(colored("Invalid input. Please enter a valid number.", "red"))
-
-
-
-
-
-#
-#
-#       4
-#   2       6
-# 1   3   5   7
