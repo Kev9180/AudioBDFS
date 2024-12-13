@@ -4,13 +4,9 @@ from termcolor import colored
 
 def main():
     get_menu_choice()
-    # for i in range(5):
-    #     play_arpeggio(Chords.A_MAJOR.frequencies)
-    # for i in range(5):
-    #     play_arpeggio(Chords.A_MINOR.frequencies)
 
-    # for i in range(10):
-    #     play_note(Notes.C4.frequency)
+    for i in range(5):
+        play_note(Notes.C6.frequency)
 
 
     close_audio()

@@ -1,4 +1,6 @@
 from termcolor import colored
+from bst_node import *
+from bst import *
 import random
 
 def get_nums():
@@ -22,7 +24,8 @@ def get_nums():
 
                 nums = list(map(int, user_input.split()))                
                 sorted_nums = sorted(nums)
-                print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "green"))
+                print(colored(f"Thank you!\n", "green"))
+                print(colored(f"Sorted array: {sorted_nums}", "green"))
                 return sorted_nums
             except ValueError:
                 print(colored("Invalid input. Please enter a series of integers separated by spaces.", "red"))
@@ -47,30 +50,38 @@ def get_nums():
                 print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "green"))
                 return sorted_nums
             except ValueError:
-                print(colored("Invalid input. Please enter integers only.", "red"))
-
+                print(colored("Invalid input. Please enter integers only.", "red"))        
 
 
 def get_menu_choice():
     user_nums = get_nums()
+    
+    bst = BinarySearchTree()
+    bst.root = bst.build_balanced_bst(user_nums)
+
+    bst.print_bst()
 
     while True:
         try:
             print(colored("\n-- MENU --"))
-            print(colored("1\tPerform BFS"))
-            print(colored("2\tPerform DFS"))
-            print(colored("3\tRestart"))
-            print(colored("4\tQuit"))
+            print(colored("1\tPrint Tree"))
+            print(colored("2\tPerform BFS"))
+            print(colored("3\tPerform DFS"))
+            print(colored("4\tRestart"))
+            print(colored("5\tQuit"))
 
             choice = input(colored("What action would you like to perform?\n")).strip()
 
-            if choice == "1":
-                print(colored("Performing BFS...", "magenta"))
+            
+            if choice == "1":   # Print tree
+                bst.print_bst()
             elif choice == "2":
-                print(colored("Performing DFS...", "magenta"))
+                print(colored("BFS stuff goes here", "magenta"))
             elif choice == "3":
-                user_nums = get_nums()
+                print(colored("DFS stuff goes here", "magenta"))
             elif choice == "4":
+                get_menu_choice()
+            elif choice == "5":
                 print(colored("Quitting. Goodbye!", "magenta"))
                 break
             else:
@@ -79,3 +90,13 @@ def get_menu_choice():
 
         except ValueError:
             print(colored("Invalid input. Please enter a valid number.", "red"))
+
+
+
+
+
+#
+#
+#       4
+#   2       6
+# 1   3   5   7
