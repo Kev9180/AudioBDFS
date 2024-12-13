@@ -117,6 +117,49 @@ class BinarySearchTree:
             print(linestr)
             print(pstr)
 
+    def assign_notes(self):
+        """
+        Assign notes to each layer of the tree. Nodes in the same layer get the same note.
+        Layer 0: C6, Layer 1: B6, Layer 2: A6, etc.
+        """
+        if not self.root:
+            print(colored("Tree is empty. Cannot assign notes.", "red"))
+            return
+
+        # Notes to assign, starting from C6 and descending
+        note_sequence = [
+            Notes.C6, Notes.B6, Notes.A6, Notes.G6, Notes.F6,
+            Notes.E6, Notes.D6, Notes.C5, Notes.B5, Notes.A5
+        ]
+
+        # Breadth-first traversal using a queue
+        queue = deque([(self.root, 0)])  # (node, layer)
+        while queue:
+            node, layer = queue.popleft()
+
+            # Assign note based on the layer, wrap around if layer exceeds note_sequence length
+            node.note = note_sequence[layer % len(note_sequence)]
+
+            # Add children to the queue if they exist
+            if node.left:
+                queue.append((node.left, layer + 1))
+            if node.right:
+                queue.append((node.right, layer + 1))
+
+
+    def print_notes(self, node=None):
+        """
+        Print each node's value and its assigned note (in-order traversal).
+        """
+        if node is None:
+            node = self.root
+
+        if node:
+            self.print_notes(node.left)
+            print(f"Node Value: {node.value}, Note: {node.note.name}")
+            self.print_notes(node.right)
+
+
     def delete():
         pass
 

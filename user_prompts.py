@@ -62,6 +62,7 @@ def get_menu_choice():
 
     if user_nums:
         bst.print_bst()
+        bst.print_notes()
 
     while True:
         try:
