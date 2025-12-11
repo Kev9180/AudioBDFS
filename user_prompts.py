@@ -46,7 +46,7 @@ def get_nums():
 
                     nums = [random.randint(min_val, max_val) for _ in range(nums_size)]
                     sorted_nums = sorted(nums)
-                    print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "green"))
+                    print(colored(f"Thank you!\nSorted nums: {sorted_nums}", "magenta"))
                     return sorted_nums
                 except ValueError:
                     print(colored("Invalid input. Please enter integers only.", "red"))        
@@ -66,12 +66,12 @@ def get_menu_choice():
 
     while True:
         try:
-            print(colored("\n-- MENU --"))
-            print(colored("1\tPrint Tree"))
-            print(colored("2\tPerform BFS"))
-            print(colored("3\tPerform DFS"))
-            print(colored("4\tRestart"))
-            print(colored("5\tQuit"))
+            print(colored("\n-- MENU --", "magenta"))
+            print(colored("1\tPrint Tree", "green"))
+            print(colored("2\tPerform BFS", "blue"))
+            print(colored("3\tPerform DFS", "cyan"))
+            print(colored("4\tRestart", "yellow"))
+            print(colored("5\tQuit", "red"))
 
             choice = input(colored("What action would you like to perform?\n")).strip()
 

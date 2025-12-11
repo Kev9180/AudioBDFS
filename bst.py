@@ -1,6 +1,9 @@
 from collections import deque
 from audio import Notes
 from termcolor import colored
+# Available termcolor colors:
+# text colors: black, red, green, yellow, blue, magenta, cyan, white,
+# highlight colors: on_grey, on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white
 
 class BSTNode:
     def __init__(self, value, note):
@@ -73,7 +76,7 @@ class BinarySearchTree:
         adapted from the following Stack Overflow comment: https://stackoverflow.com/a/72497198
         """
         if self.root is None:
-            print("Tree is empty.")
+            print(colored("Tree is empty.", "red"))
             return
 
         # Adjust height by subtracting 1
@@ -114,8 +117,8 @@ class BinarySearchTree:
                     preline = n[2] + seg + seg // 2
                 pstr += ' ' * (n[2] - pre - len(valstr)) + valstr
                 pre = n[2]
-            print(linestr)
-            print(pstr)
+            print(colored(linestr, "green"))
+            print(colored(pstr, "green"))
 
     def assign_notes(self):
         """
@@ -148,16 +151,24 @@ class BinarySearchTree:
 
 
     def print_notes(self, node=None):
-        """
-        Print each node's value and its assigned note (in-order traversal).
-        """
+        """Print value + note for every node (in-order)."""
+        # If called with no arg, start at root.
         if node is None:
             node = self.root
+            # If the tree is empty, stop now.
+            if node is None:
+                return
 
-        if node:
+        # Now this is the recursive part where node is guaranteed not None
+        if node.left:
             self.print_notes(node.left)
-            print(f"Node Value: {node.value}, Note: {node.note.name}")
+
+        note_name = getattr(node.note, "name", None) or "None"
+        print(f"Node Value: {node.value}, Note: {note_name}")
+
+        if node.right:
             self.print_notes(node.right)
+
 
 
     def delete():

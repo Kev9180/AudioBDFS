@@ -6,7 +6,7 @@ def main():
     get_menu_choice()
 
     for i in range(5):
-        play_note(Notes.C6.frequency)
+        play_arpeggio(Notes.C4.frequency)
 
 
     close_audio()
